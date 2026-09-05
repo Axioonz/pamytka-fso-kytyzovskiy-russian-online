@@ -4995,8 +4995,9 @@ if(docs.length) renderDoc(docs[0]);
   }
 
   async function requestSecretDoc(docId, password){
-    if(cache.has(docId)) return cache.get(docId);
-
+    // ВАЖНО: здесь намеренно НЕ используем cache.
+    // Эта функция применяется и для проверки введённого пароля,
+    // поэтому каждый вызов должен реально обращаться к Worker.
     const response = await fetch(SECRET_WORKER + "/document", {
       method: "POST",
       headers: {
