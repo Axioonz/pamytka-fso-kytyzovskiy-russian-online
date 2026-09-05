@@ -1848,6 +1848,139 @@ body::before{
 }
 </style>
 
+
+<style id="v19-convoy-styles">
+/* Public convoy diagrams */
+.convoy-section-head{margin-bottom:12px}
+.convoy-note{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin:0 0 14px;
+  padding:11px 12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--panel2);
+  color:var(--muted);
+}
+.convoy-note>span{
+  flex:0 0 auto;
+  width:24px;height:24px;
+  display:grid;place-items:center;
+  border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));
+  border-radius:7px;
+  color:var(--accent);
+  font-weight:900;
+}
+.convoy-note p{margin:1px 0 0;font-size:11px;line-height:1.5}
+.convoy-list{display:grid;gap:14px}
+.convoy-card{
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:var(--panel);
+  box-shadow:var(--shadow);
+}
+.convoy-card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  padding:12px 14px;
+  border-bottom:1px solid var(--line);
+}
+.convoy-card-head small{
+  display:block;
+  margin-bottom:2px;
+  color:var(--accent);
+  font-size:7px;
+  font-weight:950;
+  letter-spacing:.12em;
+}
+.convoy-card-head h3{margin:0;font-size:15px}
+.convoy-open{
+  flex:0 0 auto;
+  border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));
+  border-radius:8px;
+  background:var(--panel2);
+  color:var(--accent);
+  padding:7px 9px;
+  font-size:9px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.15s ease;
+}
+.convoy-open:hover{border-color:var(--accent);transform:translateY(-1px)}
+.convoy-image-button{
+  display:block;
+  width:100%;
+  padding:0;
+  border:0;
+  background:#050607;
+  cursor:zoom-in;
+  overflow:hidden;
+}
+.convoy-image-button img{
+  display:block;
+  width:100%;
+  height:auto;
+  transition:transform .22s ease,opacity .22s ease;
+}
+.convoy-image-button:hover img{transform:scale(1.006);opacity:.96}
+
+/* Fullscreen viewer */
+.convoy-lightbox{
+  position:fixed;
+  inset:0;
+  z-index:10060;
+  display:none;
+  background:rgba(3,6,9,.94);
+  backdrop-filter:blur(8px);
+}
+.convoy-lightbox.open{display:grid;grid-template-rows:auto 1fr}
+.convoy-lightbox-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:12px 16px;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  color:#fff;
+}
+.convoy-lightbox-bar b{font-size:13px}
+.convoy-lightbox-close{
+  width:36px;height:36px;
+  display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:8px;
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  font-size:18px;
+  cursor:pointer;
+}
+.convoy-lightbox-stage{
+  min-height:0;
+  overflow:auto;
+  display:grid;
+  place-items:center;
+  padding:18px;
+}
+.convoy-lightbox-stage img{
+  display:block;
+  max-width:100%;
+  width:auto;
+  height:auto;
+  max-height:calc(100vh - 88px);
+  object-fit:contain;
+  box-shadow:0 18px 60px rgba(0,0,0,.45);
+}
+@media(max-width:700px){
+  .convoy-card-head{align-items:flex-start;flex-direction:column}
+  .convoy-open{width:100%}
+  .convoy-lightbox-stage{padding:8px}
+}
+</style>
+
 </head><body>
 <header class="topbar"><div class="topbar-in">
 <div class="brand">
@@ -1862,6 +1995,7 @@ body::before{
 <button data-page="departments">Подразделения</button>
 <button data-page="process">Задержание и права</button>
 <button data-page="terms">Термины</button>
+<button data-page="convoys">Кортежи</button>
 <button data-page="codes">Коды</button>
 <button data-page="rules">Правила проекта</button>
 <button data-page="laws">Документы</button>
@@ -4274,6 +4408,62 @@ body::before{
 требование законно и исполнимо.</pre></details>
 </section>
 <section class="page" id="page-terms"><div class="section-head"><div><h2>Термины и разъяснения</h2><p>Только понятия, у которых есть специальный смысл и которые реально становятся предметом спора.</p></div><div class="count" id="termCount"></div></div><div class="term-search"><span>⌕</span><input id="termSearch" placeholder="Поиск: законное требование, провокация, КПП, неприкосновенность, досмотр..."/></div><div class="term-filters"><button class="term-filter active" data-term-filter="all">Все</button><button class="term-filter" data-term-filter="Служебные понятия">Служебные</button><button class="term-filter" data-term-filter="Государственная охрана">Гос. охрана</button><button class="term-filter" data-term-filter="Территории и доступ">Территории</button><button class="term-filter" data-term-filter="Процесс">Процесс</button></div><div id="termList"><article class="term-card" data-search="Компетенция Круг вопросов и действий, которые закон относит к конкретному органу или должностному лицу. Для ФСО это принципиально: форма, звание или приказ не дают общих полицейских полномочий, если конкретная задача не относится к государственной охране. ФЗ «О ФСО РО» — ст. 6 компетенция полномочия можно ли ФСО юрисдикция" data-term-group="Служебные понятия"><div class="term-kicker">Служебные понятия</div><h3>Компетенция</h3><p>Круг вопросов и действий, которые закон относит к конкретному органу или должностному лицу. Для ФСО это принципиально: форма, звание или приказ не дают общих полицейских полномочий, если конкретная задача не относится к государственной охране.</p><small>ФЗ «О ФСО РО» — ст. 6</small></article><article class="term-card" data-search="Законное требование Обязательное и конкретное указание, которое сотрудник вправе заявить именно в этой ситуации. По ПК оно должно быть в пределах компетенции и юрисдикции, однозначным, конкретным, законным, этичным, исполнимым и сформулированным как требование, а не добровольное предложение. ПК РО — гл. XI ст. 2 требование приказ законное требование выполнить повелительное" data-term-group="Служебные понятия"><div class="term-kicker">Служебные понятия</div><h3>Законное требование</h3><p>Обязательное и конкретное указание, которое сотрудник вправе заявить именно в этой ситуации. По ПК оно должно быть в пределах компетенции и юрисдикции, однозначным, конкретным, законным, этичным, исполнимым и сформулированным как требование, а не добровольное предложение.</p><small>ПК РО — гл. XI ст. 2</small></article><article class="term-card" data-search="Провокация Намеренное действие или высказывание, цель которого — подтолкнуть другого игрока к нарушению правил либо специально создать ситуацию, в которой от него ожидают или добиваются нарушения. Обычный спор, критика, вопрос или законное требование сами по себе провокацией не являются: ключевой признак — целенаправленное подталкивание к нарушению. П. 5.12 Основных правил проекта; рабочее определение провокация спровоцировал подстрекательство вывести на нарушение" data-term-group="Служебные понятия"><div class="term-kicker">Служебные понятия</div><h3>Провокация</h3><p>Намеренное действие или высказывание, цель которого — подтолкнуть другого игрока к нарушению правил либо специально создать ситуацию, в которой от него ожидают или добиваются нарушения. Обычный спор, критика, вопрос или законное требование сами по себе провокацией не являются: ключевой признак — целенаправленное подталкивание к нарушению.</p><small>П. 5.12 Основных правил проекта; рабочее определение</small></article><article class="term-card" data-search="Неповиновение законному требованию Не просто спор с сотрудником, а отказ либо неисполнение законного, понятного и относящегося к компетенции требования. Продолжение после повторного законного требования выделено в УК отдельно. УК РО — ст. 17.6 неповиновение отказ игнорирует требование не выполняет 17.6" data-term-group="Служебные понятия"><div class="term-kicker">Служебные понятия</div><h3>Неповиновение законному требованию</h3><p>Не просто спор с сотрудником, а отказ либо неисполнение законного, понятного и относящегося к компетенции требования. Продолжение после повторного законного требования выделено в УК отдельно.</p><small>УК РО — ст. 17.6</small></article><article class="term-card" data-search="Процессуальная неприкосновенность Не «иммунитет от закона», а специальный порядок применения к определённому должностному лицу задержания, ареста, обыска и иных существенно ограничивающих мер. Она не освобождает от ответственности. ФЗ «О неприкосновенности должностных лиц» — ст. 1–2 неприкосновенность иммунитет должностное лицо задержать обыскать" data-term-group="Служебные понятия"><div class="term-kicker">Служебные понятия</div><h3>Процессуальная неприкосновенность</h3><p>Не «иммунитет от закона», а специальный порядок применения к определённому должностному лицу задержания, ареста, обыска и иных существенно ограничивающих мер. Она не освобождает от ответственности.</p><small>ФЗ «О неприкосновенности должностных лиц» — ст. 1–2</small></article><article class="term-card" data-search="Кратковременное удаление ≠ задержание Удаление лица за пределы охранной зоны не считается задержанием, если после удаления человек свободен и его свобода больше процессуально не ограничивается. ФЗ «О ФСО РО» — ст. 30 ч. 5 удаление вывести с территории не задержание свободен" data-term-group="Служебные понятия"><div class="term-kicker">Служебные понятия</div><h3>Кратковременное удаление ≠ задержание</h3><p>Удаление лица за пределы охранной зоны не считается задержанием, если после удаления человек свободен и его свобода больше процессуально не ограничивается.</p><small>ФЗ «О ФСО РО» — ст. 30 ч. 5</small></article><article class="term-card" data-search="Процессуальный час Срок процессуального задержания начинает иметь значение с фактического ограничения свободы как задержания, а не только с момента надевания наручников. ПК РО; ФЗ «О ФСО РО» — ст. 30 ч. 3 процессуальный час срок задержания один час наручники" data-term-group="Служебные понятия"><div class="term-kicker">Служебные понятия</div><h3>Процессуальный час</h3><p>Срок процессуального задержания начинает иметь значение с фактического ограничения свободы как задержания, а не только с момента надевания наручников.</p><small>ПК РО; ФЗ «О ФСО РО» — ст. 30 ч. 3</small></article><article class="term-card" data-search="Охраняемый объект ФСО Объект, в отношении которого установлен именно режим государственной охраны ФСО. Не каждое государственное здание автоматически является охраняемым объектом ФСО только потому, что туда приехало охраняемое лицо. ФЗ «О ФСО РО» — ст. 4, 21 охраняемый объект ФСО здание правительство режим охраны" data-term-group="Государственная охрана"><div class="term-kicker">Государственная охрана</div><h3>Охраняемый объект ФСО</h3><p>Объект, в отношении которого установлен именно режим государственной охраны ФСО. Не каждое государственное здание автоматически является охраняемым объектом ФСО только потому, что туда приехало охраняемое лицо.</p><small>ФЗ «О ФСО РО» — ст. 4, 21</small></article><article class="term-card" data-search="Охраняемое мероприятие Официальное государственное мероприятие, в отношении которого ФСО осуществляет комплекс мер государственной охраны. На время такого мероприятия могут вводиться специальные пропускные и режимные меры. ФЗ «О ФСО РО» — ст. 4, 22 мероприятие охраняемое мероприятие периметр пропуск" data-term-group="Государственная охрана"><div class="term-kicker">Государственная охрана</div><h3>Охраняемое мероприятие</h3><p>Официальное государственное мероприятие, в отношении которого ФСО осуществляет комплекс мер государственной охраны. На время такого мероприятия могут вводиться специальные пропускные и режимные меры.</p><small>ФЗ «О ФСО РО» — ст. 4, 22</small></article><article class="term-card" data-search="Охранная зона Установленная уполномоченным руководителем зона вокруг охраняемого лица, объекта или мероприятия, где действуют специальные правила доступа и безопасности. Это не произвольный «радиус», который сотрудник придумывает на месте. ФЗ «О ФСО РО» — ст. 4, 23 охранная зона радиус периметр границы доступ" data-term-group="Государственная охрана"><div class="term-kicker">Государственная охрана</div><h3>Охранная зона</h3><p>Установленная уполномоченным руководителем зона вокруг охраняемого лица, объекта или мероприятия, где действуют специальные правила доступа и безопасности. Это не произвольный «радиус», который сотрудник придумывает на месте.</p><small>ФЗ «О ФСО РО» — ст. 4, 23</small></article><article class="term-card" data-search="Непосредственная угроза Реальная и существующая сейчас опасность нападения или иного события, способного причинить существенный вред охраняемому лицу или объекту. Не абстрактная возможность и не просто подозрение без конкретных обстоятельств. ФЗ «О ФСО РО» — ст. 4 п. 6 непосредственная угроза реальная опасность нападение сейчас" data-term-group="Государственная охрана"><div class="term-kicker">Государственная охрана</div><h3>Непосредственная угроза</h3><p>Реальная и существующая сейчас опасность нападения или иного события, способного причинить существенный вред охраняемому лицу или объекту. Не абстрактная возможность и не просто подозрение без конкретных обстоятельств.</p><small>ФЗ «О ФСО РО» — ст. 4 п. 6</small></article><article class="term-card" data-search="Охраняемая территория Государственная территория, куда в общем случае допускается нахождение при законной цели. Сам факт охраны не превращает её в закрытую территорию. Типичный пример — открытый для посетителей холл / приёмная. ФЗ «О государственных территориях РО» — ст. 3, 11–14 охраняемая территория холл приемная открытая зона посетитель" data-term-group="Территории и доступ"><div class="term-kicker">Территории и доступ</div><h3>Охраняемая территория</h3><p>Государственная территория, куда в общем случае допускается нахождение при законной цели. Сам факт охраны не превращает её в закрытую территорию. Типичный пример — открытый для посетителей холл / приёмная.</p><small>ФЗ «О государственных территориях РО» — ст. 3, 11–14</small></article><article class="term-card" data-search="Закрытая территория Территория, свободное посещение которой исключено. Для входа нужно предусмотренное законом основание: специальный статус, служебный допуск, исполнение полномочия, приглашение / сопровождение или пропуск. ФЗ «О государственных территориях РО» — ст. 18–20 закрытая территория служебная зона за КПП пропуск допуск" data-term-group="Территории и доступ"><div class="term-kicker">Территории и доступ</div><h3>Закрытая территория</h3><p>Территория, свободное посещение которой исключено. Для входа нужно предусмотренное законом основание: специальный статус, служебный допуск, исполнение полномочия, приглашение / сопровождение или пропуск.</p><small>ФЗ «О государственных территориях РО» — ст. 18–20</small></article><article class="term-card" data-search="Режимный объект Объект с усиленным режимом охраны, допуска и нахождения из-за особо значимой безопасности. Это отдельный правовой режим, а не просто «очень закрытая территория». ФЗ «О государственных территориях РО» — ст. 3, гл. IV режимный объект красная зона усиленный режим" data-term-group="Территории и доступ"><div class="term-kicker">Территории и доступ</div><h3>Режимный объект</h3><p>Объект с усиленным режимом охраны, допуска и нахождения из-за особо значимой безопасности. Это отдельный правовой режим, а не просто «очень закрытая территория».</p><small>ФЗ «О государственных территориях РО» — ст. 3, гл. IV</small></article><article class="term-card" data-search="Временный особый режим Временный набор дополнительных ограничений, который вводится по предусмотренному законом основанию поверх основного режима территории. Самостоятельным видом территории не является. ФЗ «О государственных территориях РО» — ст. 3 ч. 2, ст. 9 временный особый режим временно закрыли эвакуация периметр" data-term-group="Территории и доступ"><div class="term-kicker">Территории и доступ</div><h3>Временный особый режим</h3><p>Временный набор дополнительных ограничений, который вводится по предусмотренному законом основанию поверх основного режима территории. Самостоятельным видом территории не является.</p><small>ФЗ «О государственных территориях РО» — ст. 3 ч. 2, ст. 9</small></article><article class="term-card" data-search="КПП Не вид территории, а специально определённое место, где проверяются основания доступа, документы, пропуска и меры безопасности. Какие именно требования допустимы на КПП, зависит от режима территории и полномочий сотрудника. ФЗ «О государственных территориях РО» — ст. 3 п. 10 КПП кпп проходная пост вход документы пропуск" data-term-group="Территории и доступ"><div class="term-kicker">Территории и доступ</div><h3>КПП</h3><p>Не вид территории, а специально определённое место, где проверяются основания доступа, документы, пропуска и меры безопасности. Какие именно требования допустимы на КПП, зависит от режима территории и полномочий сотрудника.</p><small>ФЗ «О государственных территориях РО» — ст. 3 п. 10</small></article><article class="term-card" data-search="Допуск Право конкретного лица находиться в определённой служебной зоне / помещении в пределах предоставленной ему служебной необходимости. Фраза «я здесь работаю» сама по себе не означает доступ во все помещения. ФЗ «О государственных территориях РО» — ст. 20, 23 допуск сотрудник работаю здесь служебная зона" data-term-group="Территории и доступ"><div class="term-kicker">Территории и доступ</div><h3>Допуск</h3><p>Право конкретного лица находиться в определённой служебной зоне / помещении в пределах предоставленной ему служебной необходимости. Фраза «я здесь работаю» сама по себе не означает доступ во все помещения.</p><small>ФЗ «О государственных территориях РО» — ст. 20, 23</small></article><article class="term-card" data-search="Беспрепятственный доступ Специальное право отдельных должностных лиц и непосредственно сопровождающих их сотрудников ФСО проходить на определённые закрытые / режимные территории. Оно не отменяет идентификацию и меры безопасности. ФЗ «О государственных территориях РО» — ст. 21, 35 беспрепятственный доступ без пропуска премьер прокурор ФСО" data-term-group="Территории и доступ"><div class="term-kicker">Территории и доступ</div><h3>Беспрепятственный доступ</h3><p>Специальное право отдельных должностных лиц и непосредственно сопровождающих их сотрудников ФСО проходить на определённые закрытые / режимные территории. Оно не отменяет идентификацию и меры безопасности.</p><small>ФЗ «О государственных территориях РО» — ст. 21, 35</small></article><article class="term-card" data-search="Законная цель пребывания Реальная относящаяся к назначению объекта причина находиться в открытой охраняемой зоне: обращение в орган, услуга, трудоустройство, исполнение обязанности, встреча и другие предусмотренные законом цели. ФЗ «О государственных территориях РО» — ст. 13 цель посещения зачем пришел законная цель заявление трудоустройство встреча" data-term-group="Территории и доступ"><div class="term-kicker">Территории и доступ</div><h3>Законная цель пребывания</h3><p>Реальная относящаяся к назначению объекта причина находиться в открытой охраняемой зоне: обращение в орган, услуга, трудоустройство, исполнение обязанности, встреча и другие предусмотренные законом цели.</p><small>ФЗ «О государственных территориях РО» — ст. 13</small></article><article class="term-card" data-search="Досмотр и обыск — не одно и то же Досмотр при доступе может быть добровольным условием входа и ограничивается целью безопасности. Принудительный обыск — самостоятельная процессуальная мера, для которой требуется отдельное законное основание. Отказ от добровольного досмотра не превращает его в принудительный обыск. ФЗ «О ФСО РО» — ст. 28 досмотр обыск разница сумка вещи отказ добровольно" data-term-group="Процесс"><div class="term-kicker">Процесс</div><h3>Досмотр и обыск — не одно и то же</h3><p>Досмотр при доступе может быть добровольным условием входа и ограничивается целью безопасности. Принудительный обыск — самостоятельная процессуальная мера, для которой требуется отдельное законное основание. Отказ от добровольного досмотра не превращает его в принудительный обыск.</p><small>ФЗ «О ФСО РО» — ст. 28</small></article><article class="term-card" data-search="Задержание Фактическое процессуальное ограничение свободы по конкретному законному основанию. Для ФСО действует специальный перечень оснований ст. 30 ФЗ «О ФСО РО», а после возникновения задержания — требования Процессуального кодекса. ФЗ «О ФСО РО» — ст. 30; ПК РО — гл. II задержание задержать свобода ст 30 процесс" data-term-group="Процесс"><div class="term-kicker">Процесс</div><h3>Задержание</h3><p>Фактическое процессуальное ограничение свободы по конкретному законному основанию. Для ФСО действует специальный перечень оснований ст. 30 ФЗ «О ФСО РО», а после возникновения задержания — требования Процессуального кодекса.</p><small>ФЗ «О ФСО РО» — ст. 30; ПК РО — гл. II</small></article></div></section>
+
+<section class="page" id="page-convoys">
+  <div class="section-head convoy-section-head">
+    <div>
+      <h2>Схемы кортежей</h2>
+      <p>Быстрые визуальные схемы построения сопровождения.</p>
+    </div>
+  </div>
+
+  <div class="convoy-note">
+    <span>ℹ</span>
+    <p>Схемы используются как визуальная памятка. При расхождении приоритет имеют действующие нормативные акты, приказы и распоряжения.</p>
+  </div>
+
+  <div class="convoy-list">
+    <article class="convoy-card">
+      <div class="convoy-card-head">
+        <div>
+          <small>СХЕМА КОРТЕЖА</small>
+          <h3>Премьер-министр</h3>
+        </div>
+        <button class="convoy-open" type="button" data-convoy-src="convoy_pm.png" data-convoy-title="Схема кортежа · Премьер-министр">Открыть крупно</button>
+      </div>
+      <button class="convoy-image-button" type="button" data-convoy-src="convoy_pm.png" data-convoy-title="Схема кортежа · Премьер-министр" aria-label="Открыть схему кортежа Премьер-министра крупно">
+        <img src="convoy_pm.png" alt="Схема кортежа Премьер-министра" loading="lazy">
+      </button>
+    </article>
+
+    <article class="convoy-card">
+      <div class="convoy-card-head">
+        <div>
+          <small>СХЕМА КОРТЕЖА</small>
+          <h3>Вице-премьер-министр</h3>
+        </div>
+        <button class="convoy-open" type="button" data-convoy-src="convoy_vice_pm.png" data-convoy-title="Схема кортежа · Вице-премьер-министр">Открыть крупно</button>
+      </div>
+      <button class="convoy-image-button" type="button" data-convoy-src="convoy_vice_pm.png" data-convoy-title="Схема кортежа · Вице-премьер-министр" aria-label="Открыть схему кортежа Вице-премьер-министра крупно">
+        <img src="convoy_vice_pm.png" alt="Схема кортежа Вице-премьер-министра" loading="lazy">
+      </button>
+    </article>
+
+    <article class="convoy-card">
+      <div class="convoy-card-head">
+        <div>
+          <small>СХЕМА КОРТЕЖА</small>
+          <h3>ОООГО</h3>
+        </div>
+        <button class="convoy-open" type="button" data-convoy-src="convoy_oogo.png" data-convoy-title="Схема кортежа · ОООГО">Открыть крупно</button>
+      </div>
+      <button class="convoy-image-button" type="button" data-convoy-src="convoy_oogo.png" data-convoy-title="Схема кортежа · ОООГО" aria-label="Открыть схему кортежа ОООГО крупно">
+        <img src="convoy_oogo.png" alt="Схема кортежа ОООГО" loading="lazy">
+      </button>
+    </article>
+  </div>
+</section>
+
 <section class="page" id="page-codes">
 <div class="section-head"><div><h2>Оперативные коды <span class="codes-secret-badge">СЕКРЕТНО</span></h2><p>Приложение № 1 к Приказу ФСО № 23 от 1 сентября 2026 г. · Гриф: «Секретно»</p></div></div><div class="secure-section-lock" id="codesSecureLock">
 <div class="secure-lock-icon">🔒</div>
@@ -4320,6 +4510,17 @@ body::before{
 </section>
 </div>
 </section>
+
+<div class="convoy-lightbox" id="convoyLightbox" aria-hidden="true">
+  <div class="convoy-lightbox-bar">
+    <b id="convoyLightboxTitle">Схема кортежа</b>
+    <button class="convoy-lightbox-close" id="convoyLightboxClose" type="button" aria-label="Закрыть">×</button>
+  </div>
+  <div class="convoy-lightbox-stage" id="convoyLightboxStage">
+    <img id="convoyLightboxImage" alt="">
+  </div>
+</div>
+
 <footer class="footer">
 <div class="footer-info">
 <div class="footer-main">
@@ -4357,7 +4558,7 @@ function showPage(name,updateHash=true){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 $$('.nav button[data-page]').forEach(b=>b.onclick=()=>showPage(b.dataset.page));
-const initPage=location.hash.replace('#',''); if(['home','basis','situations','departments','process','terms','codes','rules','laws'].includes(initPage)) showPage(initPage,false);
+const initPage=location.hash.replace('#',''); if(['home','basis','situations','departments','process','terms','convoys','codes','rules','laws'].includes(initPage)) showPage(initPage,false);
 
 const themeBtn=$('#themeBtn');
 function setTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem('fso-theme',t);}catch(e){} themeBtn.textContent=t==='dark'?'☀':'◐';}
@@ -5231,4 +5432,37 @@ if(docs.length) renderDoc(docs[0]);
   });
 })();
 </script>
+
+<script id="v19-convoy-script">
+(function(){
+  const box=document.getElementById('convoyLightbox');
+  const img=document.getElementById('convoyLightboxImage');
+  const title=document.getElementById('convoyLightboxTitle');
+  const close=document.getElementById('convoyLightboxClose');
+  if(!box||!img||!title||!close)return;
+
+  function openConvoy(src,label){
+    img.src=src;
+    img.alt=label||'Схема кортежа';
+    title.textContent=label||'Схема кортежа';
+    box.classList.add('open');
+    box.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  }
+  function closeConvoy(){
+    box.classList.remove('open');
+    box.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+    setTimeout(()=>{if(!box.classList.contains('open'))img.removeAttribute('src');},120);
+  }
+
+  document.querySelectorAll('[data-convoy-src]').forEach(el=>{
+    el.addEventListener('click',()=>openConvoy(el.dataset.convoySrc,el.dataset.convoyTitle));
+  });
+  close.addEventListener('click',closeConvoy);
+  box.addEventListener('click',e=>{if(e.target===box||e.target.id==='convoyLightboxStage')closeConvoy();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&box.classList.contains('open'))closeConvoy();});
+})();
+</script>
+
 </body></html>
