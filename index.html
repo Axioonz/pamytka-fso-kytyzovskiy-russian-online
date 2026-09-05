@@ -1981,6 +1981,121 @@ body::before{
 }
 </style>
 
+
+<style id="v20-header-and-convoy-fixes">
+/* Навигация: при нехватке ширины первый пункт больше не обрезается.
+   justify-content:center у переполненного flex-контейнера с overflow мог
+   уводить начало меню за левую границу. */
+.nav{
+  justify-content:flex-start !important;
+  min-width:0;
+  scroll-padding-inline:8px;
+}
+.nav button{
+  flex:0 0 auto;
+}
+
+/* Чуть компактнее верхняя панель на обычных ноутбуках/нешироких окнах. */
+@media (max-width:1380px) and (min-width:761px){
+  .topbar-in{
+    max-width:100%;
+    padding-left:14px;
+    padding-right:14px;
+    gap:10px;
+  }
+  .brand{
+    min-width:190px;
+  }
+  .brand-author{
+    display:none;
+  }
+  .nav{
+    gap:0;
+  }
+  .nav button{
+    padding-left:7px;
+    padding-right:7px;
+    font-size:10px;
+  }
+}
+
+/* Расшифровка ОООГО в карточке. */
+.convoy-card-subtitle{
+  margin:4px 0 0;
+  max-width:520px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.35;
+  font-weight:650;
+}
+</style>
+
+
+<style id="v21-floating-controls">
+/* Звук и тема вынесены из шапки, чтобы всё меню, включая «Документы»,
+   помещалось без обрезания на обычных экранах. */
+.floating-ui-controls{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:45;
+  display:flex;
+  gap:10px;
+  padding:7px;
+  border:1px solid color-mix(in srgb,var(--line) 82%,transparent);
+  border-radius:16px;
+  background:color-mix(in srgb,var(--panel) 88%,transparent);
+  box-shadow:0 12px 36px rgba(0,0,0,.22);
+  backdrop-filter:blur(14px);
+}
+.floating-ui-controls .floating-ui-btn{
+  width:48px;
+  height:48px;
+  min-width:48px;
+  padding:0;
+  border-radius:13px;
+  font-size:17px;
+  box-shadow:none;
+}
+.floating-ui-controls .floating-ui-btn:hover{
+  transform:translateY(-1px);
+}
+.floating-ui-controls .sound-btn.muted{
+  opacity:.58;
+}
+
+/* В шапке теперь остаются только доступ и помощь — отдаём меню больше места. */
+.topbar-in{
+  gap:12px;
+}
+.nav{
+  min-width:0;
+}
+@media (max-width:1380px) and (min-width:761px){
+  .topbar-in{
+    gap:8px;
+  }
+  .nav button{
+    padding-left:6px;
+    padding-right:6px;
+  }
+}
+@media (max-width:760px){
+  .floating-ui-controls{
+    right:12px;
+    bottom:12px;
+    gap:7px;
+    padding:6px;
+    border-radius:14px;
+  }
+  .floating-ui-controls .floating-ui-btn{
+    width:44px;
+    height:44px;
+    min-width:44px;
+  }
+}
+</style>
+
 </head><body>
 <header class="topbar"><div class="topbar-in">
 <div class="brand">
@@ -2000,8 +2115,12 @@ body::before{
 <button data-page="rules">Правила проекта</button>
 <button data-page="laws">Документы</button>
 </nav>
-<button class="theme secret-access-btn" id="secretAccessBtn" title="Доступ к секретным материалам">🔒</button><button class="theme help-btn" id="helpBtn" title="Помощь и обратная связь">?</button><button class="theme sound-btn" id="soundBtn" title="Звук интерфейса">🔊</button><button class="theme" id="themeBtn">◐</button>
+<button class="theme secret-access-btn" id="secretAccessBtn" title="Доступ к секретным материалам">🔒</button><button class="theme help-btn" id="helpBtn" title="Помощь и обратная связь">?</button>
 </div></header>
+<div class="floating-ui-controls" aria-label="Настройки интерфейса">
+  <button class="theme sound-btn floating-ui-btn" id="soundBtn" title="Включить или отключить звук интерфейса" aria-label="Звук интерфейса">🔊</button>
+  <button class="theme floating-ui-btn" id="themeBtn" title="Сменить тему" aria-label="Сменить тему">◐</button>
+</div>
 <main class="wrap">
 <section class="page active" id="page-home">
 <div class="hero">
@@ -4454,11 +4573,12 @@ body::before{
         <div>
           <small>СХЕМА КОРТЕЖА</small>
           <h3>ОООГО</h3>
+          <p class="convoy-card-subtitle">Особо охраняемые объекты государственной охраны</p>
         </div>
-        <button class="convoy-open" type="button" data-convoy-src="convoy_oogo.png" data-convoy-title="Схема кортежа · ОООГО">Открыть крупно</button>
+        <button class="convoy-open" type="button" data-convoy-src="convoy_oogo.png" data-convoy-title="Схема кортежа · ОООГО — Особо охраняемые объекты государственной охраны">Открыть крупно</button>
       </div>
-      <button class="convoy-image-button" type="button" data-convoy-src="convoy_oogo.png" data-convoy-title="Схема кортежа · ОООГО" aria-label="Открыть схему кортежа ОООГО крупно">
-        <img src="convoy_oogo.png" alt="Схема кортежа ОООГО" loading="lazy">
+      <button class="convoy-image-button" type="button" data-convoy-src="convoy_oogo.png" data-convoy-title="Схема кортежа · ОООГО — Особо охраняемые объекты государственной охраны" aria-label="Открыть схему кортежа ОООГО крупно">
+        <img src="convoy_oogo.png" alt="Схема кортежа ОООГО — Особо охраняемые объекты государственной охраны" loading="lazy">
       </button>
     </article>
   </div>
